@@ -1,0 +1,69 @@
+#+SEQ_TODO: PROJECT(p) SOMEDAY(s) | PROJDONE(D)
+#+SEQ_TODO: TODO(t) NEXT(n) WAITING(w) | DONE(d)
+
+* My projects
+*** PROJECT Repaint the walls in the kitchen
+***** DONE Choose the color
+***** DONE Buy the paint
+***** PROJECT Paint the walls
+      :PROPERTIES:
+      :ORDERED:  t 
+      :END:
+******* NEXT Apply the first coat
+      	SCHEDULED: <2009-06-24 mer>  DEADLINE: <2009-06-25 jeu> 
+******* TODO Apply the second coat
+	SCHEDULED: <2009-06-26 ven>
+******* TODO Apply the third coat
+*** PROJECT A project blocked by someone else
+***** WAITING Wait the answer from xxx
+***** DONE [#A] A very important task
+      SCHEDULED: <2009-06-22 lun>
+      :LOGBOOK:
+      - Created                              [2009-06-21 dim 10:43]
+      - State changed: NEXT -> DONE          [2009-06-21 dim 16:30]
+      :END:
+      :PROPERTIES:
+      :ID:       bb4c1742-374f-4196-90ed-099de99fdb25
+      :EFFORT:   0:20
+      :END:
+      Contents of the task
+***** NEXT [#C] A less important task
+      SCHEDULED: <2009-06-22 lun> DEADLINE: <2009-06-22 lun>
+      :LOGBOOK:
+      - Created                              [2009-06-22 lun 23:59]
+      :END:
+      :PROPERTIES:
+      :ID:       79e4e44e-de83-4f5f-9351-01932fef83a7
+      :ORDERED:  t
+      :EFFORT:   0:20
+      :END:
+*** PROJDONE Finished project
+***** DONE Done task 1
+***** DONE Done task 2
+
+* Legend
+*** States
+***** PROJECT PROJECT
+*****  PROJDONE PROJDONE 
+***** SOMEDAY SOMEDAY
+***** TODO TODO
+*****  NEXT NEXT
+*****  WAITING WAITING
+*****  DONE DONE
+*** Properties
+***** SCHEDULED
+      SCHEDULED: <2009-06-23 mar>
+***** DEADLINE
+      DEADLINE: <2009-06-23 mar>
+***** CLOSED
+      CLOSED: [2009-06-23 mar 15:58]
+***** LOGBOOK
+      :LOGBOOK:
+***** PROPERTIES
+      :PROPERTIES:
+*** Priorities
+***** [#A] A Priority
+***** [#B] B Priority
+***** [#C] C Priority
+***** No Priority
+

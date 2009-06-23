@@ -35,18 +35,15 @@
   (defun org-locate-file (filename path)
     (locate-library filename t path)))
 
-(setq org-status-icons-default-directory "~/icons/org-mode/")
+(setq org-icons-default-directory "~/.soft/elisp/org-icons/icons/png")
 
 (setq org-status-icons 
       '(("PROJECT" . "project.png")
         ("TODO" . "todo.png")))
 
-(defun org-get-icon (name)
-  (create-image (org-locate-file org-status-icons-default-directory name)))
-
-(defun l-org-get-icon (icon-name)
+(defun org-get-icon (icon-name)
   "Returns the name of the icon file for ICON-NAME."
-  (concat (file-name-as-directory org-status-icons-default-directory) icon-name))
+  (concat (file-name-as-directory org-icons-default-directory) icon-name))
 
 (defun linkd-file-icon (file-name)
   "Choose an appropriate icon for FILE-NAME based on the name or extension.
@@ -66,39 +63,31 @@ Returns the file-name to the icon image file."
   "Add the todo state faces."
   (let (
 	(re-heading (concat "^\\(\\**\\)\\(\\*[ \t]+\\)" org-todo-regexp "\\(.*\\|$\\)"))
-	(i-project (l-org-get-icon "project-crop.png"))
-	(i-project-done (l-org-get-icon "project-crop-done.png"))
-	(i-todo-blue (l-org-get-icon "rect-blue2.png"))
-	(i-todo-next (l-org-get-icon "todo-next.png"))
-	(i-todo-star (l-org-get-icon "todo-biggerstar.png"))
-	(i-todo-ok (l-org-get-icon "todo-ok.png"))
-	(i-todo-bad (l-org-get-icon "todo-bad.png"))
-	(i-todo-normal (l-org-get-icon "todo-normal.png"))
-	(i-drawer-end (l-org-get-icon "drawer-end.png"))
-	(i-logbook (l-org-get-icon "logbook.png"))
-	(i-rect-blue (l-org-get-icon "rect-blue.png"))
-	(i-birect-blue (l-org-get-icon "birect-blue.png"))
-	(i-rect-chocolate (l-org-get-icon "rect-chocolate.png"))
-	(i-rect-green (l-org-get-icon "rect-green.png"))
-	(i-birect-green (l-org-get-icon "birect-green.png"))
-	(i-rect-grey1 (l-org-get-icon "rect-grey1.png"))
-	(i-rect-grey2 (l-org-get-icon "rect-grey2.png"))
-	(i-rect-orange (l-org-get-icon "rect-orange.png"))
-	(i-rect-scarlet (l-org-get-icon "rect-scarlet.png"))
-	(i-rect-violet (l-org-get-icon "rect-violet.png"))
-	(i-rect-yellow (l-org-get-icon "rect-yellow.png"))
+	(i-todo-blue (org-get-icon "rect-blue.png"))
+	(i-todo-chocolate (org-get-icon "rect-chocolate.png"))
+	(i-todo-green (org-get-icon "rect-green.png"))
+	(i-todo-grey1 (org-get-icon "rect-grey1.png"))
+	(i-todo-grey2 (org-get-icon "rect-grey2.png"))
+	(i-todo-orange (org-get-icon "rect-orange.png"))
+	(i-todo-scarlet (org-get-icon "rect-scarlet.png"))
+	(i-todo-violet (org-get-icon "rect-violet.png"))
+	(i-todo-yellow (org-get-icon "rect-yellow.png"))
+	(i-project-blue (org-get-icon "project-blue.png"))
+	(i-project-green (org-get-icon "project-green.png"))
+	(i-project-grey1 (org-get-icon "project-grey1.png"))
 	)
     (while (re-search-forward re-heading limit t)
       (let* ((state (match-string 3))
 	     (tags (org-get-tags-at))
 	     ;(has-tag (lambda (tag) (if (member tag tags) t nil)))
 	     (icon (cond
-		   ((equal state "PROJECT") i-birect-blue)
-		   ((equal state "PROJDONE") i-birect-green)
-		   ((equal state "TODO") i-rect-grey1)
-		   ((equal state "NEXT") i-rect-blue)
-		   ((equal state "DONE") i-rect-green)
-		   ((equal state "WAITING") i-rect-scarlet)
+		   ((equal state "PROJECT") i-project-blue)
+		   ((equal state "PROJDONE") i-project-green)
+		   ((equal state "SOMEDAY") i-project-grey1)
+		   ((equal state "TODO") i-todo-grey1)
+		   ((equal state "NEXT") i-todo-blue)
+		   ((equal state "DONE") i-todo-green)
+		   ((equal state "WAITING") i-todo-scarlet)
 		   ; This works
 		   ;((and (member "NEXT" (org-get-tags-at)) (equal state "NA")) i-todo-star)
 		   ; This doesn't. I must be missing something, possibly a funcall/apply somewhere
@@ -122,8 +111,9 @@ Returns the file-name to the icon image file."
   "Add the drawer faces."
   (let (
 	(re-drawer "^[ \t]*\\(:LOGBOOK:\\|:END:\\)[ \t]*\n?")
-	(i-drawer-end (l-org-get-icon "drawer-end.png"))
-	(i-logbook (l-org-get-icon "logbook3.png"))
+	(i-drawer-end (org-get-icon "drawer-end.png"))
+	(i-logbook (org-get-icon "logbook.png"))
+	(i-properties (org-get-icon "properties.png"))
 	)
     (progn
       (save-excursion
@@ -134,6 +124,7 @@ Returns the file-name to the icon image file."
 		 (tags (org-get-tags-at))
 		 (icon (cond
 			((equal name "LOGBOOK") i-logbook)
+			((equal name "PROPERTIES") i-properties)
 			(t nil))))
 	    (when icon
 	      (set-icon (1-(match-beginning 1)) (1+ (match-end 1)) 
@@ -146,8 +137,9 @@ Returns the file-name to the icon image file."
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (let (
-	(i-scheduled (l-org-get-icon "array-a-green.png"))
-	(i-deadline  (l-org-get-icon "deadline.png"))
+	(i-scheduled (org-get-icon "scheduled-ok.png"))
+	(i-deadline  (org-get-icon "deadline-ok.png"))
+	(i-closed  (org-get-icon "closed.png"))
 	)
   (progn
     (save-excursion
@@ -158,8 +150,30 @@ Returns the file-name to the icon image file."
       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
 	(set-icon (match-beginning 0) (match-end 0)
 		  (create-image i-deadline nil nil :ascent 'center :margin '(0 . 0)))))
+    (save-excursion
+      (while (re-search-forward (concat "\\<" org-closed-string) limit t)
+	(set-icon (match-beginning 0) (match-end 0)
+		  (create-image i-closed nil nil :ascent 'center :margin '(0 . 0)))))
 )))
-
 ;org-closed-string
 ;org-clock-string
+
+(defun org-font-lock-add-priority-faces (limit)
+  "Add the special priority faces."
+  (let (
+	(i-prio-a (org-get-icon "prio-a.png"))
+	(i-prio-b (org-get-icon "prio-b.png"))
+	(i-prio-c (org-get-icon "prio-c.png"))
+	(i-prio-nil (org-get-icon "prio-nil.png"))
+	)
+  (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
+      (let* ((pri (match-string 1))
+	     (icon (cond
+		   ((equal pri "A") i-prio-a)
+		   ((equal pri "B") i-prio-b)
+		   ((equal pri "C") i-prio-c)
+		   (t nil))))
+	(when icon (set-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
+			     (create-image icon nil nil :ascent 'center)))))))
+
 
