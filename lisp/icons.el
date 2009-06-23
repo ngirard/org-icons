@@ -24,11 +24,6 @@
 
 ;;; Code:
 
-
-
-(provide 'icons)
-;;; icons.el ends here
-
 ;; Emacs21.3 or earlier does not have locate-file.
 (if (fboundp 'locate-file)
     (defalias 'org-locate-file 'locate-file)
@@ -176,4 +171,9 @@ Returns the file-name to the icon image file."
 	(when icon (set-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
 			     (create-image icon nil nil :ascent 'center)))))))
 
+
+
+
+(provide 'icons)
+;;; icons.el ends here
 
