@@ -115,9 +115,7 @@ Returns the file-name to the icon image file."
 	  (set-icon (match-beginning 2) (match-end 3) 
 		    (create-image icon nil nil :ascent 'center)
 	   )
-	  ))
-      )
-))
+	  )))))
 
 		       
 (defun org-font-lock-add-drawer-faces (limit)
@@ -145,54 +143,23 @@ Returns the file-name to the icon image file."
 	      (set-icon (match-beginning 1) (match-end 1)
 			(create-image i-drawer-end nil nil :ascent 'center :margin '(0 . 0))))))
 
-;;   (let (
-;; 	(re-drawer "^[ \t]*\\(:LOGBOOK:\\|:END:\\)[ \t]*\n?")
-;; 	(i-drawer-end (l-org-get-icon "drawer-end.png"))
-;; 	(i-logbook (l-org-get-icon "logbook3.png"))
-;; 	)
-;;     (while (re-search-forward re-drawer limit t)
-;;       (let* ((name (match-string 1))
-;; 	     (tags (org-get-tags-at))
-;; 	     (icon (cond
-;; 		   ((equal name ":LOGBOOK:") i-logbook)
-;; 		   ((equal name ":END:") i-drawer-end)
-;; 		   (t nil))))
-;; 	(when icon
-;; 	  (set-icon (match-beginning 1) (match-end 1) 
-;; 		    (create-image icon nil nil :ascent 'center :margin '(0 . 0))))
-;;       ))
-;; ))
-
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (let (
 	(i-scheduled (l-org-get-icon "array-a-green.png"))
+	(i-deadline  (l-org-get-icon "deadline.png"))
 	)
   (progn
     (save-excursion
-      (while (re-search-forward (concat "\\<" org-deadline-string) limit t) t))
-    (save-excursion
       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
 	(set-icon (match-beginning 0) (match-end 0)
-		  (create-image i-scheduled nil nil :ascent 'center :margin '(0 . 0))))))))
-
-
-(defun org-font-lock-add-special-keyword-faces (limit)
-  (progn
-    (save-excursion 
+		  (create-image i-scheduled nil nil :ascent 'center :margin '(0 . 0)))))
+    (save-excursion
       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-	(add-text-properties (match-beginning 0) (match-end 0) 
-			     (list 'face 'org-special-keyword 'font-lock-fontified t))))
-    (save-excursion 
-      (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-	(add-text-properties (match-beginning 0) (match-end 0) 
-			     (list 'face 'org-special-keyword 'font-lock-fontified t))))
-    (save-excursion 
-      (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-	(add-text-properties (match-beginning 0) (match-end 0) 
-			     (list 'face 'org-special-keyword 'font-lock-fontified t))))
-    (save-excursion 
-      (while (re-search-forward (concat "\\<" org-clock-string) limit t)
-	(add-text-properties (match-beginning 0) (match-end 0) 
-			     (list 'face 'org-special-keyword 'font-lock-fontified t))))
-))
+	(set-icon (match-beginning 0) (match-end 0)
+		  (create-image i-deadline nil nil :ascent 'center :margin '(0 . 0)))))
+)))
+
+;org-closed-string
+;org-clock-string
+
