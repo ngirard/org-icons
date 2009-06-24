@@ -20,7 +20,16 @@
 
 ;;; Commentary:
 
-;; 
+;; This program adds pretty icons to org-mode buffers. The icons
+;; replace certain org-mode constructs onscreen with color and shape
+;; coded icons. The icons' color scheme follows the Tango scheme (see
+;; link below.)
+
+;; Github repository: 
+;; http://github.com/ngirard/org-icons/tree/master
+
+;; Tango icon theme info: 
+;; http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
 
 ;;; Code:
 
