@@ -20,10 +20,10 @@
 
 ;;; Commentary:
 
-;; This program adds pretty icons to org-mode buffers. The icons
-;; replace certain org-mode constructs onscreen with color and shape
-;; coded icons. The icons' color scheme follows the Tango scheme (see
-;; link below.)
+;; This org-mode add-on lets you replace certain org-mode constructs
+;; onscreen with color and shape coded icons. The content of the org
+;; buffer is not affected. The included icons' color scheme follows
+;; the Tango specification (see link below).
 
 ;; Github repository: 
 ;; http://github.com/ngirard/org-icons/tree/master
@@ -33,36 +33,30 @@
 
 ;;; Code:
 
+;;;; Compatibility 
+
 ;; Emacs21.3 or earlier does not have locate-file.
+
 (if (fboundp 'locate-file)
     (defalias 'org-locate-file 'locate-file)
   (defun org-locate-file (filename path)
     (locate-library filename t path)))
 
-(setq org-icons-default-directory "~/.soft/elisp/org-icons/icons/png")
+;;;; Finding icon files
 
-(setq org-status-icons 
-      '(("PROJECT" . "project.png")
-        ("TODO" . "todo.png")))
+(defvar org-icons-default-directory "~/org-icons/icons/png"
+  "Directory to search for icons.
+Set this to where you have installed the accompanying org icons.")
 
 (defun org-get-icon (icon-name)
   "Returns the name of the icon file for ICON-NAME."
-  (concat (file-name-as-directory org-icons-default-directory) icon-name))
+  (expand-file-name icon-name (file-name-as-directory org-icons-default-directory)))
 
-(defun linkd-file-icon (file-name)
-  "Choose an appropriate icon for FILE-NAME based on the name or extension.
-Returns the file-name to the icon image file."
-  (let* ((dir (file-name-as-directory linkd-icons-directory))
-         (icon (concat dir "linkd-file-" (file-name-extension file-name) ".xpm")))
-    (if (file-exists-p icon)
-        icon
-      (concat dir "linkd-file-generic.xpm"))))
+;;;; Drawing icons in a buffer
 
-(defun set-icon (beg end icon)
+(defun draw-icon (beg end icon)
   (add-text-properties beg end (list 'display icon)))
-;  (add-text-properties beg end (list 'display icon)))
 
-;-------------------
 (defun org-font-lock-add-todo-state-faces (limit)
   "Add the todo state faces."
   (let (
@@ -105,11 +99,10 @@ Returns the file-name to the icon image file."
 	  ;(set-text-properties 
 	  ; (match-beginning 3) (match-end 3)
 	  ; (list 'display (create-image icon nil nil :ascent 'center))
-	  (set-icon (match-beginning 2) (match-end 3) 
+	  (draw-icon (match-beginning 2) (match-end 3) 
 		    (create-image icon nil nil :ascent 'center)
 	   )
 	  )))))
-
 		       
 (defun org-font-lock-add-drawer-faces (limit)
   "Add the drawer faces."
@@ -131,13 +124,12 @@ Returns the file-name to the icon image file."
 			((equal name "PROPERTIES") i-properties)
 			(t nil))))
 	    (when icon
-	      (set-icon (1-(match-beginning 1)) (1+ (match-end 1)) 
+	      (draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) 
 			(create-image icon nil nil :ascent 'center :margin '(0 . 0))))
       ))))
       (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
-	      (set-icon (match-beginning 1) (match-end 1)
+	      (draw-icon (match-beginning 1) (match-end 1)
 			(create-image i-drawer-end nil nil :ascent 'center :margin '(0 . 0))))))
-
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (let (
@@ -148,19 +140,17 @@ Returns the file-name to the icon image file."
   (progn
     (save-excursion
       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-	(set-icon (match-beginning 0) (match-end 0)
+	(draw-icon (match-beginning 0) (match-end 0)
 		  (create-image i-scheduled nil nil :ascent 'center :margin '(0 . 0)))))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-	(set-icon (match-beginning 0) (match-end 0)
+	(draw-icon (match-beginning 0) (match-end 0)
 		  (create-image i-deadline nil nil :ascent 'center :margin '(0 . 0)))))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-	(set-icon (match-beginning 0) (match-end 0)
+	(draw-icon (match-beginning 0) (match-end 0)
 		  (create-image i-closed nil nil :ascent 'center :margin '(0 . 0)))))
 )))
-;org-closed-string
-;org-clock-string
 
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
@@ -177,10 +167,26 @@ Returns the file-name to the icon image file."
 		   ((equal pri "B") i-prio-b)
 		   ((equal pri "C") i-prio-c)
 		   (t nil))))
-	(when icon (set-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
+	(when icon (draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
 			     (create-image icon nil nil :ascent 'center)))))))
 
+;;;; Unused code
 
+;; FIXME this function is not used?
+(defun linkd-file-icon (file-name)
+  "Choose an appropriate icon for FILE-NAME based on the name or extension.
+Returns the file-name to the icon image file."
+  (let* ((dir (file-name-as-directory linkd-icons-directory))
+         (icon (concat dir "linkd-file-" (file-name-extension file-name) ".xpm")))
+    (if (file-exists-p icon)
+        icon
+      (concat dir "linkd-file-generic.xpm"))))
+
+;; FIXME this variable is apparently not used?
+(defvar org-status-icons 
+  '(("PROJECT" . "project.png")
+    ("TODO" . "todo.png"))
+  "FIXME Documentation goes here")
 
 
 (provide 'icons)
