@@ -1,20 +1,26 @@
-diff --git a/lisp/org.el b/lisp/org.el
-index 300303b..e6caf9b 100644
---- a/lisp/org.el
-+++ b/lisp/org.el
-@@ -4513,8 +4513,9 @@ between words."
+--- org.el.orig	2010-03-12 12:25:11.561367398 +0100
++++ org.el	2010-03-12 12:27:26.221372440 +0100
+@@ -4638,12 +4638,13 @@
  	   ;; Call the hook
  	   '(org-font-lock-hook)
  	   ;; Headlines
--	   '("^\\(\\**\\)\\(\\* \\)\\(.*\\)" (1 (org-get-level-face 1))
--	     (2 (org-get-level-face 2)) (3 (org-get-level-face 3)))
-+	   ;'("^\\(\\**\\)\\(\\* \\)\\(.*\\)" (1 (org-get-level-face 1))
-+	   ;  (2 (org-get-level-face 2)) (3 (org-get-level-face 3)))
+-	   `(,(if org-fontify-whole-heading-line
+-		  "^\\(\\**\\)\\(\\* \\)\\(.*\n?\\)"
+-		"^\\(\\**\\)\\(\\* \\)\\(.*\\)")
+-	     (1 (org-get-level-face 1))
+-	     (2 (org-get-level-face 2))
+-	     (3 (org-get-level-face 3)))
++	   ;; `(,(if org-fontify-whole-heading-line
++	   ;; 	  "^\\(\\**\\)\\(\\* \\)\\(.*\n?\\)"
++	   ;; 	"^\\(\\**\\)\\(\\* \\)\\(.*\\)")
++	   ;;   (1 (org-get-level-face 1))
++	   ;;   (2 (org-get-level-face 2))
++	   ;;   (3 (org-get-level-face 3)))
 +	   '(org-font-lock-add-headline-faces)
  	   ;; Table lines
  	   '("^[ \t]*\\(\\(|\\|\\+-[-+]\\).*\\S-\\)"
  	     (1 'org-table t))
-@@ -4524,8 +4525,9 @@ between words."
+@@ -4653,8 +4654,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
  	   ;; Drawers
@@ -26,7 +32,7 @@ index 300303b..e6caf9b 100644
  	   ;; Properties
  	   (list org-property-re
  		 '(1 'org-special-keyword t)
-@@ -4541,25 +4543,18 @@ between words."
+@@ -4670,25 +4672,18 @@
  				     (2 'org-footnote t)))
  	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
  	   '(org-hide-wide-columns (0 nil append))
@@ -59,7 +65,7 @@ index 300303b..e6caf9b 100644
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -4634,6 +4629,66 @@ If KWD is a number, get the corresponding match group."
+@@ -4764,6 +4759,66 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
