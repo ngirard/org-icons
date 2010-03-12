@@ -93,15 +93,8 @@ Set this to where you have installed the accompanying org icons.")
 		   ;((and (has-tag "NEXT") (equal state "NA")) i-todo-star)
 		   (t nil))))
 	(when icon
-	  ; I'd prefer the leading '*' to be hidden, using
-	  ;   (match-beginning 2)
-	  ; but it leads to misalignment of drawers and body text.
-	  ;(set-text-properties 
-	  ; (match-beginning 3) (match-end 3)
-	  ; (list 'display (create-image icon nil nil :ascent 'center))
 	  (draw-icon (match-beginning 2) (match-end 3) 
-		    (create-image icon nil nil :ascent 'center)
-	   )
+		    (create-image icon nil nil :ascent 'center))
 	  )))))
 		       
 (defun org-font-lock-add-drawer-faces (limit)
