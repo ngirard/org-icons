@@ -134,6 +134,13 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
    (drawer-end  "drawer-end")
    (t nil))))
 
+(defun org-special-keyword-icon-at (keyword)
+  (progn (cond
+   ((equal keyword org-scheduled-string) "scheduled")
+   ((equal keyword org-deadline-string) "deadline")
+   ((equal keyword org-closed-string) "closed")
+   (t nil))))
+
 
 ;;;; Low-level functions
 
@@ -165,19 +172,26 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
       (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
 	(org-draw-icon (match-beginning 1) (match-end 1) (org-drawer-icon-at nil t)))))
 
+;; (defun org-font-lock-add-special-keyword-faces (limit)
+;;   (progn
+;;     (save-excursion
+;;       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
+;; 	(org-draw-icon (match-beginning 0) (match-end 0) "scheduled")))
+;;     (save-excursion
+;;       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
+;; 	(org-draw-icon (match-beginning 0) (match-end 0) "deadline")))
+;;     (save-excursion
+;;       (while (re-search-forward (concat "\\<" org-closed-string) limit t)
+;; 	(org-draw-icon (match-beginning 0) (match-end 0) "closed")))
+;; ))
 (defun org-font-lock-add-special-keyword-faces (limit)
-  (progn
+  (let ((re (concat "\\<\\(" org-scheduled-string 
+		    "\\|" org-deadline-string 
+		    "\\|" org-closed-string "\\)")))
     (save-excursion
-      (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-	(org-draw-icon (match-beginning 0) (match-end 0) "scheduled")))
-    (save-excursion
-      (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-	(org-draw-icon (match-beginning 0) (match-end 0) "deadline")))
-    (save-excursion
-      (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-	(org-draw-icon (match-beginning 0) (match-end 0) "closed")))
-))
-
+      (while (re-search-forward re limit t)
+	(let ((name (match-string 1)))
+	(org-draw-icon (match-beginning 0) (match-end 0) (org-special-keyword-icon-at keyword)))))))
 
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
