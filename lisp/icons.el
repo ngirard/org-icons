@@ -76,6 +76,10 @@ Set this to where you have installed the accompanying org icons.")
     ("drawer-end" . "drawer-end")
     ("logbook" . "logbook")
     ("properties" . "properties")
+    ("prio-a" . "prio-a")
+    ("prio-b" . "prio-b")
+    ("prio-c" . "prio-c")
+    ("prio-nil" . "prio-nil")
     )
   "Alist of icons.
 The car of each element is a string, denoting the icon. The cdr is the name of the file containing the icon, minus the extension.")
@@ -94,6 +98,8 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 (defun draw-icon (beg end icon)
   (add-text-properties beg end (list 'display icon)))
 
+;;;; High-level functions
+
 (defun org-todo-state-icon-at (state tags)
   (progn (cond
    ((equal  "PROJECT"  state) "project-blue")
@@ -104,6 +110,16 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
    ((equal  "DONE"     state) "todo-green")
    ((equal  "WAITING"  state) "todo-scarlet")
    (t nil))))
+
+(defun org-priority-icon-at (pri)
+  (progn (cond
+   ((equal pri "A") "prio-a")
+   ((equal pri "B") "prio-b")
+   ((equal pri "C") "prio-c")
+   (t nil))))
+
+
+;;;; Low-level functions
 
 (defun org-font-lock-add-todo-state-faces (limit)
   "Add the todo state faces."
@@ -162,23 +178,14 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 		  (create-image i-closed nil nil :ascent 'center :margin '(0 . 0)))))
 )))
 
+
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
-  (let (
-	(i-prio-a (org-get-icon "prio-a.png"))
-	(i-prio-b (org-get-icon "prio-b.png"))
-	(i-prio-c (org-get-icon "prio-c.png"))
-	(i-prio-nil (org-get-icon "prio-nil.png"))
-	)
   (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
       (let* ((pri (match-string 1))
-	     (icon (cond
-		   ((equal pri "A") i-prio-a)
-		   ((equal pri "B") i-prio-b)
-		   ((equal pri "C") i-prio-c)
-		   (t nil))))
+	     (icon (org-priority-icon-at pri)))
 	(when icon (draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
-			     (create-image icon nil nil :ascent 'center)))))))
+			     (create-image (gethash icon org-icon-hash) nil nil :ascent 'center))))))
 
 ;;;; Unused code
 
