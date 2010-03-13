@@ -206,6 +206,6 @@ Returns the file-name to the icon image file."
     ("TODO" . "todo.png"))
   "FIXME Documentation goes here")
 
-(provide 'icons)
-;;; icons.el ends here
+(provide 'org-icons)
+;;; org-icons.el ends here
 

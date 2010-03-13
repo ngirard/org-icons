@@ -3,8 +3,8 @@ Basic instructions:
     cd path/to/org-mode
     patch < path/to/org-icons.patch
     rm org.elc ; make ; sudo make install
-- load icons.el:
-    M-x load-file RET icons.el RET
+- load org-icons.el:
+    M-x load-file RET org-icons.el RET
 - switch to an org document
 - re-fontify the buffer:
   M-x font-lock-fontify-buffer RET
