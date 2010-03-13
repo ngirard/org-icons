@@ -52,51 +52,65 @@ Set this to where you have installed the accompanying org icons.")
   "Returns the name of the icon file for ICON-NAME."
   (expand-file-name icon-name (file-name-as-directory org-icons-default-directory)))
 
+;;;; List of icons
+
+(defvar org-icon-alist
+  '(("todo-blue" . "rect-blue")
+    ("todo-chocolate" . "rect-chocolate")
+    ("todo-green" . "rect-green")
+    ("todo-grey1" . "rect-grey1")
+    ("todo-grey2" . "rect-grey2")
+    ("todo-orange" . "rect-orange")
+    ("todo-scarlet" . "rect-scarlet")
+    ("todo-violet" . "rect-violet")
+    ("todo-yellow" . "rect-yellow")
+    ("project-blue" . "project-blue")
+    ("project-green" . "project-green")
+    ("project-grey1" . "project-grey1")
+    ("drawer-end" . "drawer-end")
+    ("logbook" . "logbook")
+    ("properties" . "properties")
+    )
+  "Alist of icons.
+The car of each element is a string, denoting the icon. The cdr is the name of the file containing the icon, minus the extension.")
+
+(setq org-icon-hash (make-hash-table :test 'equal))
+
+(let ((oia org-icon-alist) a)
+  (while (setq a (pop oia))
+    (puthash (car a) 
+	     (org-get-icon (concat (cdr a) ".png")) org-icon-hash)
+    ))
+;(i-todo-chocolate (org-get-icon "rect-chocolate.png"))
+
 ;;;; Drawing icons in a buffer
 
 (defun draw-icon (beg end icon)
   (add-text-properties beg end (list 'display icon)))
 
+(defun org-todo-state-icon-at (state tags)
+  (progn (cond
+   ((equal  "PROJECT"  state) "project-blue")
+   ((equal  "PROJDONE" state) "project-green")
+   ((member "SOMEDAY"  tags ) "todo-grey1")
+   ((equal  "TODO"     state) "todo-grey2")
+   ((equal  "NEXT"     state) "todo-blue")
+   ((equal  "DONE"     state) "todo-green")
+   ((equal  "WAITING"  state) "todo-scarlet")
+   (t nil))))
+
 (defun org-font-lock-add-todo-state-faces (limit)
   "Add the todo state faces."
-  (let (
-	(re-heading (concat "^\\(\\**\\)\\(\\*[ \t]+\\)" org-todo-regexp "\\(.*\\|$\\)"))
-	(i-todo-blue (org-get-icon "rect-blue.png"))
-	(i-todo-chocolate (org-get-icon "rect-chocolate.png"))
-	(i-todo-green (org-get-icon "rect-green.png"))
-	(i-todo-grey1 (org-get-icon "rect-grey1.png"))
-	(i-todo-grey2 (org-get-icon "rect-grey2.png"))
-	(i-todo-orange (org-get-icon "rect-orange.png"))
-	(i-todo-scarlet (org-get-icon "rect-scarlet.png"))
-	(i-todo-violet (org-get-icon "rect-violet.png"))
-	(i-todo-yellow (org-get-icon "rect-yellow.png"))
-	(i-project-blue (org-get-icon "project-blue.png"))
-	(i-project-green (org-get-icon "project-green.png"))
-	(i-project-grey1 (org-get-icon "project-grey1.png"))
-	)
+  (let ((re-heading (concat "^\\(\\**\\)\\(\\*[ \t]+\\)" org-todo-regexp "\\(.*\\|$\\)")))
     (while (re-search-forward re-heading limit t)
       (let* ((state (match-string 3))
 	     (tags (org-get-tags-at))
-	     ;(has-tag (lambda (tag) (if (member tag tags) t nil)))
-	     (icon (cond
-		   ((equal state "PROJECT") i-project-blue)
-		   ((equal state "PROJDONE") i-project-green)
-		   ((equal state "SOMEDAY") i-project-grey1)
-		   ((equal state "TODO") i-todo-grey1)
-		   ((equal state "NEXT") i-todo-blue)
-		   ((equal state "DONE") i-todo-green)
-		   ((equal state "WAITING") i-todo-scarlet)
-		   ; This works
-		   ;((and (member "NEXT" (org-get-tags-at)) (equal state "NA")) i-todo-star)
-		   ; This doesn't. I must be missing something, possibly a funcall/apply somewhere
-		   ; for has-tag to work
-		   ;((and (has-tag "NEXT") (equal state "NA")) i-todo-star)
-		   (t nil))))
+	     (icon (org-todo-state-icon-at state tags)))
 	(when icon
 	  (draw-icon (match-beginning 2) (match-end 3) 
-		    (create-image icon nil nil :ascent 'center))
+		    (create-image (gethash icon org-icon-hash) nil nil :ascent 'center))
 	  )))))
-		       
+
 (defun org-font-lock-add-drawer-faces (limit)
   "Add the drawer faces."
   (let (
@@ -180,7 +194,6 @@ Returns the file-name to the icon image file."
   '(("PROJECT" . "project.png")
     ("TODO" . "todo.png"))
   "FIXME Documentation goes here")
-
 
 (provide 'icons)
 ;;; icons.el ends here
