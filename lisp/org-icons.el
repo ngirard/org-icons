@@ -1,6 +1,6 @@
 ;;; org-icons.el --- Org-mode icons
 
-;; Copyright (C) 2009  Nicolas Girard
+;; Copyright (C) 2009, 2010  Nicolas Girard
 
 ;; Author: Nicolas Girard <girard.nicolas@gmail.com>
 ;; Keywords: faces
@@ -92,7 +92,10 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 (let ((oia org-icon-alist) a)
   (while (setq a (pop oia))
     (puthash (car a) 
-	     (org-get-icon (concat (cdr a) ".png")) org-icon-hash)
+	     (create-image
+	      (org-get-icon (concat (cdr a) ".png")) 
+	      nil nil :ascent 'center :margin '(0 . 0))
+	     org-icon-hash)
     ))
 ;(i-todo-chocolate (org-get-icon "rect-chocolate.png"))
 
@@ -100,6 +103,9 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 
 (defun draw-icon (beg end icon)
   (add-text-properties beg end (list 'display icon)))
+
+(defun org-draw-icon (beg end name)
+  (draw-icon beg end (gethash name org-icon-hash)))
 
 ;;;; High-level functions
 
@@ -132,8 +138,7 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 	     (tags (org-get-tags-at))
 	     (icon (org-todo-state-icon-at state tags)))
 	(when icon
-	  (draw-icon (match-beginning 2) (match-end 3) 
-		    (create-image (gethash icon org-icon-hash) nil nil :ascent 'center))
+	  (org-draw-icon (match-beginning 2) (match-end 3) icon)		    
 	  )))))
 
 (defun org-font-lock-add-drawer-faces (limit)
@@ -151,32 +156,23 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 			((equal name "PROPERTIES") "properties")
 			(t nil))))
 	    (when icon
-	      (draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) 
-			(create-image (gethash icon org-icon-hash) 
-				      nil nil :ascent 'center :margin '(0 . 0))))
+	      (org-draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) icon))
       ))))
       (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
 	      (draw-icon (match-beginning 1) (match-end 1)
-			(create-image (gethash "drawer-end" org-icon-hash) nil
-				      nil :ascent 'center :margin '(0 . 0))))))
+			(gethash "drawer-end" org-icon-hash)))))
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (progn
     (save-excursion
       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image (gethash "scheduled" org-icon-hash) 
-				nil nil :ascent 'center :margin '(0 . 0)))))
+	(org-draw-icon (match-beginning 0) (match-end 0) "scheduled")))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image (gethash "deadline" org-icon-hash) 
-				nil nil :ascent 'center :margin '(0 . 0)))))
+	(org-draw-icon (match-beginning 0) (match-end 0) "deadline")))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image (gethash "closed" org-icon-hash) 
-				nil nil :ascent 'center :margin '(0 . 0)))))
+	(org-draw-icon (match-beginning 0) (match-end 0) "closed")))
 ))
 
 
@@ -185,8 +181,7 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
   (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
       (let* ((pri (match-string 1))
 	     (icon (org-priority-icon-at pri)))
-	(when icon (draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) 
-			     (create-image (gethash icon org-icon-hash) nil nil :ascent 'center))))))
+	(when icon (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon)))))
 
 ;;;; Unused code
 
