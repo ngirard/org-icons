@@ -127,6 +127,13 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
    ((equal pri "C") "prio-c")
    (t nil))))
 
+(defun org-drawer-icon-at (name drawer-end)
+  (progn (cond
+   ((equal name "LOGBOOK") "logbook")
+   ((equal name "PROPERTIES") "properties")
+   (drawer-end  "drawer-end")
+   (t nil))))
+
 
 ;;;; Low-level functions
 
@@ -151,16 +158,12 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 	  ; (match-beginning 0) (match-end 0) (list 'face 'org-special-keyword 'font-lock-fontified t))
 	  (let* ((name (match-string 1))
 		 (tags (org-get-tags-at))
-		 (icon (cond
-			((equal name "LOGBOOK") "logbook")
-			((equal name "PROPERTIES") "properties")
-			(t nil))))
+		 (icon (org-drawer-icon-at name nil)))
 	    (when icon
 	      (org-draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) icon))
       ))))
       (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
-	      (draw-icon (match-beginning 1) (match-end 1)
-			(gethash "drawer-end" org-icon-hash)))))
+	(org-draw-icon (match-beginning 1) (match-end 1) (org-drawer-icon-at nil t)))))
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (progn
