@@ -119,12 +119,7 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 
 (defun org-font-lock-add-drawer-faces (limit)
   "Add the drawer faces."
-  (let (
-	(re-drawer "^[ \t]*\\(:LOGBOOK:\\|:END:\\)[ \t]*\n?")
-	(i-drawer-end (org-get-icon "drawer-end.png"))
-	(i-logbook (org-get-icon "logbook.png"))
-	(i-properties (org-get-icon "properties.png"))
-	)
+  (let ((re-drawer "^[ \t]*\\(:LOGBOOK:\\|:END:\\)[ \t]*\n?"))
     (progn
       (save-excursion
 	(while (re-search-forward org-drawer-regexp limit t)
@@ -133,16 +128,18 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 	  (let* ((name (match-string 1))
 		 (tags (org-get-tags-at))
 		 (icon (cond
-			((equal name "LOGBOOK") i-logbook)
-			((equal name "PROPERTIES") i-properties)
+			((equal name "LOGBOOK") "logbook")
+			((equal name "PROPERTIES") "properties")
 			(t nil))))
 	    (when icon
 	      (draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) 
-			(create-image icon nil nil :ascent 'center :margin '(0 . 0))))
+			(create-image (gethash icon org-icon-hash) 
+				      nil nil :ascent 'center :margin '(0 . 0))))
       ))))
       (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
 	      (draw-icon (match-beginning 1) (match-end 1)
-			(create-image i-drawer-end nil nil :ascent 'center :margin '(0 . 0))))))
+			(create-image (gethash "drawer-end" org-icon-hash) nil
+				      nil :ascent 'center :margin '(0 . 0))))))
 
 (defun org-font-lock-add-special-keyword-faces (limit)
   (let (
