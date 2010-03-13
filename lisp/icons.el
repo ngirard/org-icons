@@ -80,6 +80,9 @@ Set this to where you have installed the accompanying org icons.")
     ("prio-b" . "prio-b")
     ("prio-c" . "prio-c")
     ("prio-nil" . "prio-nil")
+    ("scheduled" . "scheduled-ok")
+    ("deadline" . "deadline-ok")
+    ("closed" . "closed")
     )
   "Alist of icons.
 The car of each element is a string, denoting the icon. The cdr is the name of the file containing the icon, minus the extension.")
@@ -158,25 +161,23 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 				      nil :ascent 'center :margin '(0 . 0))))))
 
 (defun org-font-lock-add-special-keyword-faces (limit)
-  (let (
-	(i-scheduled (org-get-icon "scheduled-ok.png"))
-	(i-deadline  (org-get-icon "deadline-ok.png"))
-	(i-closed  (org-get-icon "closed.png"))
-	)
   (progn
     (save-excursion
       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
 	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image i-scheduled nil nil :ascent 'center :margin '(0 . 0)))))
+		  (create-image (gethash "scheduled" org-icon-hash) 
+				nil nil :ascent 'center :margin '(0 . 0)))))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
 	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image i-deadline nil nil :ascent 'center :margin '(0 . 0)))))
+		  (create-image (gethash "deadline" org-icon-hash) 
+				nil nil :ascent 'center :margin '(0 . 0)))))
     (save-excursion
       (while (re-search-forward (concat "\\<" org-closed-string) limit t)
 	(draw-icon (match-beginning 0) (match-end 0)
-		  (create-image i-closed nil nil :ascent 'center :margin '(0 . 0)))))
-)))
+		  (create-image (gethash "closed" org-icon-hash) 
+				nil nil :ascent 'center :margin '(0 . 0)))))
+))
 
 
 (defun org-font-lock-add-priority-faces (limit)
