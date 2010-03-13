@@ -1,5 +1,8 @@
 Basic instructions:
-- apply org-icons.patch on the latest org-mode code
+- apply org-icons.patch on the latest org-mode code:
+    cd path/to/org-mode
+    patch < path/to/org-icons.patch
+    rm org.elc ; make ; sudo make install
 - load icons.el:
     M-x load-file RET icons.el RET
 - switch to an org document
