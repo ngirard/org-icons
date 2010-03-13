@@ -158,32 +158,18 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
 (defun org-font-lock-add-drawer-faces (limit)
   "Add the drawer faces."
   (let ((re-drawer "^[ \t]*\\(:LOGBOOK:\\|:END:\\)[ \t]*\n?"))
-    (progn
-      (save-excursion
+    (save-excursion
 	(while (re-search-forward org-drawer-regexp limit t)
-	  ;(add-text-properties 
-	  ; (match-beginning 0) (match-end 0) (list 'face 'org-special-keyword 'font-lock-fontified t))
 	  (let* ((name (match-string 1))
 		 (tags (org-get-tags-at))
 		 (icon (org-drawer-icon-at name nil)))
 	    (when icon
 	      (org-draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) icon))
-      ))))
-      (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
-	(org-draw-icon (match-beginning 1) (match-end 1) (org-drawer-icon-at nil t)))))
+      )))
+    (while (re-search-forward "^[ \t]*\\(:END:\\)[ \t]*\n?" limit t)
+      (org-draw-icon (match-beginning 1) (match-end 1) 
+		     (org-drawer-icon-at nil t)))))
 
-;; (defun org-font-lock-add-special-keyword-faces (limit)
-;;   (progn
-;;     (save-excursion
-;;       (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-;; 	(org-draw-icon (match-beginning 0) (match-end 0) "scheduled")))
-;;     (save-excursion
-;;       (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-;; 	(org-draw-icon (match-beginning 0) (match-end 0) "deadline")))
-;;     (save-excursion
-;;       (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-;; 	(org-draw-icon (match-beginning 0) (match-end 0) "closed")))
-;; ))
 (defun org-font-lock-add-special-keyword-faces (limit)
   (let ((re (concat "\\<\\(" org-scheduled-string 
 		    "\\|" org-deadline-string 
@@ -191,14 +177,16 @@ The car of each element is a string, denoting the icon. The cdr is the name of t
     (save-excursion
       (while (re-search-forward re limit t)
 	(let ((keyword (match-string 1)))
-	(org-draw-icon (match-beginning 0) (match-end 0) (org-special-keyword-icon-at keyword)))))))
+	(org-draw-icon (match-beginning 0) (match-end 0) 
+		       (org-special-keyword-icon-at keyword)))))))
 
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
   (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
       (let* ((pri (match-string 1))
 	     (icon (org-priority-icon-at pri)))
-	(when icon (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon)))))
+	(when icon 
+	  (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon)))))
 
 ;;;; Unused code
 
@@ -211,12 +199,6 @@ Returns the file-name to the icon image file."
     (if (file-exists-p icon)
         icon
       (concat dir "linkd-file-generic.xpm"))))
-
-;; FIXME this variable is apparently not used?
-(defvar org-status-icons 
-  '(("PROJECT" . "project.png")
-    ("TODO" . "todo.png"))
-  "FIXME Documentation goes here")
 
 (provide 'org-icons)
 ;;; org-icons.el ends here
