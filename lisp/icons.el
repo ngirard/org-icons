@@ -44,7 +44,13 @@
 
 ;;;; Finding icon files
 
-(defvar org-icons-default-directory "~/org-icons/icons/png"
+(defvar org-icons-default-directory
+  (expand-file-name
+   "png"
+   (expand-file-name
+    "icons"
+    (expand-file-name
+     ".." (file-name-directory (or load-file-name buffer-file-name)))))
   "Directory to search for icons.
 Set this to where you have installed the accompanying org icons.")
 

@@ -1,6 +1,5 @@
 Basic instructions:
 - apply org-icons.patch on the latest org-mode code
-- in icons.el, set org-status-icons-default-directory to the appropriate directory
 - load icons.el:
     M-x load-file RET icons.el RET
 - switch to an org document
