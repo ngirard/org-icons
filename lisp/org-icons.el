@@ -80,21 +80,23 @@ Set this to where you have installed the accompanying org icons.")
     ("keyword-scheduled" . "scheduled-ok")
     )
   "Alist of icons.
-The car of each element is a string, denoting the icon. The cdr is the name of the file containing the icon, minus the extension.")
+The car of each element is a string, denoting the icon. The cdr is either nil or the name of the file containing the icon, minus the extension.")
 
 
 
 (setq org-icon-hash (make-hash-table :test 'equal))
 
-(let ((oia org-icon-alist) a)
+(let ((oia org-icon-alist) a name file)
   (while (setq a (pop oia))
-    (puthash (car a) 
-	     (create-image
-	      (org-get-icon (concat (cdr a) ".png")) 
-	      nil nil :ascent 'center :margin '(0 . 0))
-	     org-icon-hash)
-    ))
-;(i-todo-chocolate (org-get-icon "rect-chocolate.png"))
+    (let ((name (car a)) (file (cdr a)))
+      (puthash name 
+	       (if file 
+		   (create-image
+		    (org-get-icon (concat (cdr a) ".png")) 
+		    nil nil :ascent 'center :margin '(0 . 0))
+		 nil)
+		 org-icon-hash)
+      )))
 
 ;;;; Drawing icons in a buffer
 
