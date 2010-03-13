@@ -1,4 +1,4 @@
-;;; icons.el --- Org-mode icons
+;;; org-icons.el --- Org-mode icons
 
 ;; Copyright (C) 2009  Nicolas Girard
 
