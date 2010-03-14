@@ -1,6 +1,6 @@
---- org.el.orig	2010-03-12 12:25:11.561367398 +0100
-+++ org.el	2010-03-12 12:27:26.221372440 +0100
-@@ -4638,12 +4638,13 @@
+--- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
++++ lisp/org.el	2010-03-14 12:22:18.476485013 +0100
+@@ -4947,12 +4947,13 @@
  	   ;; Call the hook
  	   '(org-font-lock-hook)
  	   ;; Headlines
@@ -20,7 +20,7 @@
  	   ;; Table lines
  	   '("^[ \t]*\\(\\(|\\|\\+-[-+]\\).*\\S-\\)"
  	     (1 'org-table t))
-@@ -4653,8 +4654,9 @@
+@@ -4962,8 +4963,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
  	   ;; Drawers
@@ -32,7 +32,7 @@
  	   ;; Properties
  	   (list org-property-re
  		 '(1 'org-special-keyword t)
-@@ -4670,25 +4672,18 @@
+@@ -4979,25 +4981,18 @@
  				     (2 'org-footnote t)))
  	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
  	   '(org-hide-wide-columns (0 nil append))
@@ -65,7 +65,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -4764,6 +4759,66 @@
+@@ -5083,6 +5078,66 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -132,3 +132,11 @@
  (defun org-font-lock-add-priority-faces (limit)
    "Add the special priority faces."
    (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
+@@ -6195,6 +6250,7 @@
+ 	     (t
+ 	      (or split (end-of-line 1))
+ 	      (newline (if blank 2 1)))))))
++	(remove-text-properties 0 (length head) '(display) head)
+ 	(insert head) (just-one-space)
+ 	(setq pos (point))
+ 	(end-of-line 1)
