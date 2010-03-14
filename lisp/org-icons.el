@@ -180,7 +180,7 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
-  (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
+  (when (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
       (let* ((pri (match-string 1))
 	     (icon (org-priority-icon-at pri)))
 	(when icon 

@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 15:36:54.917189068 +0100
++++ lisp/org.el	2010-03-14 15:43:06.226466649 +0100
 @@ -4962,8 +4962,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
@@ -45,7 +45,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,6 +5077,44 @@
+@@ -5083,9 +5077,47 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -89,7 +89,11 @@
 +
  (defun org-font-lock-add-priority-faces (limit)
    "Add the special priority faces."
-   (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
+-  (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
++  (when (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
+     (add-text-properties
+      (match-beginning 0) (match-end 0)
+      (list 'face (or (org-face-from-face-or-color
 @@ -6195,6 +6227,7 @@
  	     (t
  	      (or split (end-of-line 1))
