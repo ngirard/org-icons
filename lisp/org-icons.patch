@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 17:58:00.676497878 +0100
++++ lisp/org.el	2010-03-14 18:08:39.286468766 +0100
 @@ -4962,8 +4962,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
@@ -45,7 +45,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5077,52 @@
+@@ -5083,9 +5077,63 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -83,14 +83,25 @@
 +
 +(defun org-font-lock-add-drawer-faces (limit)
 +  "Add the drawer faces."
-+  (progn
-+    (save-excursion
-+      (while (re-search-forward org-drawer-regexp limit t)
-+	(add-text-properties 
-+	 (match-beginning 0) (match-end 0) (list 'face 'org-special-keyword 'font-lock-fontified t))))
-+    (while (re-search-forward "^[ \t]*:END:" limit t)
-+	(add-text-properties 
-+	 (match-beginning 0) (match-end 0) (list 'face 'org-special-keyword 'font-lock-fontified t)))))
++  (save-excursion
++    (while (re-search-forward org-drawer-regexp limit t)
++      (add-text-properties 
++       (match-beginning 0) (match-end 0) 
++       (list 'face 'org-special-keyword 'font-lock-fontified t))
++      (if org-icons-mode
++	  (let* ((name (match-string 1))
++		 (tags (org-get-tags-at))
++		 (icon (org-drawer-icon-at name nil)))
++	    (when icon
++	      (org-draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) icon))))
++      ))
++  (while (re-search-forward "^[ \t]*\\(:END:\\)" limit t)
++    (add-text-properties 
++     (match-beginning 0) (match-end 0) (list 'face 'org-special-keyword 'font-lock-fontified t))
++    (if org-icons-mode
++	(org-draw-icon (match-beginning 1) (match-end 1) 
++		       (org-drawer-icon-at nil t)))
++    ))
 +
  (defun org-font-lock-add-priority-faces (limit)
    "Add the special priority faces."
@@ -99,7 +110,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -5093,7 +5130,13 @@
+@@ -5093,7 +5141,13 @@
  		      (cdr (assoc (char-after (match-beginning 1))
  				  org-priority-faces)))
  		     'org-special-keyword)
@@ -114,7 +125,7 @@
  
  (defun org-get-tag-face (kwd)
    "Get the right face for a TODO keyword KWD.
-@@ -6195,6 +6238,7 @@
+@@ -6195,6 +6249,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))

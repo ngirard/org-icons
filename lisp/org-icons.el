@@ -154,20 +154,6 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 	  (org-draw-icon (match-beginning 2) (match-end 3) icon)		    
 	  )))))
 
-(defun org-font-lock-add-drawer-faces (limit)
-  "Add the drawer faces."
-  (save-excursion
-    (while (re-search-forward org-drawer-regexp limit t)
-      (let* ((name (match-string 1))
-	     (tags (org-get-tags-at))
-	     (icon (org-drawer-icon-at name nil)))
-	(when icon
-	  (org-draw-icon (1-(match-beginning 1)) (1+ (match-end 1)) icon))
-	)))
-  (while (re-search-forward "^[ \t]*\\(:END:\\)" limit t)
-    (org-draw-icon (match-beginning 1) (match-end 1) 
-		   (org-drawer-icon-at nil t))))
-
 ;;;; Minor mode
 (define-minor-mode org-icons-mode
   "When active, replace certain org-mode constructs
