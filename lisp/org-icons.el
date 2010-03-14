@@ -104,7 +104,9 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
   (add-text-properties beg end (list 'display icon)))
 
 (defun org-draw-icon (beg end name)
-  (draw-icon beg end (gethash name org-icon-hash)))
+  (draw-icon beg end (gethash name org-icon-hash))
+  t ; so that emacs redraws that part of the buffer
+)
 
 ;;;; High-level functions
 
@@ -149,10 +151,16 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
   t " Icons" nil (if org-icons-mode (org-icons-enable) (org-icons-disable)))
 
 (defun org-icons-enable ()
-  "Enable Org-Icons mode.")
+  "Enable Org-Icons mode."
+    (font-lock-fontify-buffer)
+)
 
 (defun org-icons-disable ()
-  "Disable Org-Icons mode.")
+  "Disable Org-Icons mode."
+  (let ((modified-p (buffer-modified-p)))
+    (remove-text-properties (point-min) (point-max) '(display))
+    (set-buffer-modified-p modified-p))
+)
 
 
 ;;;; Unused code
