@@ -1,15 +1,22 @@
-Basic instructions:
-- apply org-icons.patch on the latest org-mode code:
-    cd path/to/org-mode
-    patch < path/to/org-icons.patch
-    rm org.elc ; make ; sudo make install
-- load org-icons.el:
-    M-x load-file RET org-icons.el RET
-- switch to an org document
-- re-fontify the buffer:
-  M-x font-lock-fontify-buffer RET
-- enjoy ;-)
+* Installation
 
-Needless to say:
+1. Apply org-icons.patch on the latest org-mode code:
+    cd path/to/org-mode
+    patch < path/to/org-icons/lisp/org-icons.patch
+    rm org.elc ; make ; sudo make install
+
+2. Add these lines to your ~/.emacs:
+    (setq load-path (cons "/path/to/org-icons/lisp" load-path))
+    (require 'org-icons)
+
+3. Restart emacs
+
+
+* Configuration
+
+
+
+* Please consider...
+
 - the code is pre-alpha;
 - any suggestion / contribution warmly welcome.
