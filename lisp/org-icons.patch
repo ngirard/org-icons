@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 13:18:11.326468951 +0100
++++ lisp/org.el	2010-03-14 15:36:54.917189068 +0100
 @@ -4962,8 +4962,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
@@ -45,7 +45,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,6 +5077,52 @@
+@@ -5083,6 +5077,44 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -69,20 +69,12 @@
 +	nil))))
 +       
 +(defun org-font-lock-add-special-keyword-faces (limit)
-+  (progn
-+    (save-excursion (while (re-search-forward (concat "\\<" org-deadline-string) limit t)
-+		      (add-text-properties (match-beginning 0) (match-end 0) 
-+					   (list 'face 'org-special-keyword 'font-lock-fontified t))))
-+    (save-excursion (while (re-search-forward (concat "\\<" org-scheduled-string) limit t)
-+		      (add-text-properties (match-beginning 0) (match-end 0) 
-+					   (list 'face 'org-special-keyword 'font-lock-fontified t))))
-+    (save-excursion (while (re-search-forward (concat "\\<" org-closed-string) limit t)
-+		      (add-text-properties (match-beginning 0) (match-end 0) 
-+					   (list 'face 'org-special-keyword 'font-lock-fontified t))))
-+    (save-excursion (while (re-search-forward (concat "\\<" org-clock-string) limit t)
-+		      (add-text-properties (match-beginning 0) (match-end 0) 
-+					   (list 'face 'org-special-keyword 'font-lock-fontified t))))
-+))
++  (let ((re (concat "\\<\\(" org-scheduled-string 
++		    "\\|" org-deadline-string 
++		    "\\|" org-closed-string "\\)")))
++    (while (re-search-forward re limit t)
++      (add-text-properties (match-beginning 0) (match-end 0) 
++			   (list 'face 'org-special-keyword 'font-lock-fontified t)))))
 +
 +(defun org-font-lock-add-drawer-faces (limit)
 +  "Add the drawer faces."
@@ -98,7 +90,7 @@
  (defun org-font-lock-add-priority-faces (limit)
    "Add the special priority faces."
    (while (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
-@@ -6195,6 +6235,7 @@
+@@ -6195,6 +6227,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))
