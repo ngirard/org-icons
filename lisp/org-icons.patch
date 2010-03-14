@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 15:43:06.226466649 +0100
++++ lisp/org.el	2010-03-14 17:52:33.086469463 +0100
 @@ -4962,8 +4962,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
@@ -45,7 +45,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5077,47 @@
+@@ -5083,9 +5077,52 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -74,7 +74,12 @@
 +		    "\\|" org-closed-string "\\)")))
 +    (while (re-search-forward re limit t)
 +      (add-text-properties (match-beginning 0) (match-end 0) 
-+			   (list 'face 'org-special-keyword 'font-lock-fontified t)))))
++			   (list 'face 'org-special-keyword 'font-lock-fontified t))
++      (if org-icons-mode
++	  (let ((keyword (match-string 1)))
++	    (org-draw-icon (match-beginning 0) (match-end 0) 
++		       (org-special-keyword-icon-at keyword))))
++)))
 +
 +(defun org-font-lock-add-drawer-faces (limit)
 +  "Add the drawer faces."
@@ -94,7 +99,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -6195,6 +6227,7 @@
+@@ -6195,6 +6232,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))

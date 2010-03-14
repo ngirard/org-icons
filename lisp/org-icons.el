@@ -169,15 +169,6 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
       (org-draw-icon (match-beginning 1) (match-end 1) 
 		     (org-drawer-icon-at nil t)))))
 
-(defun org-font-lock-add-special-keyword-faces (limit)
-  (let ((re (concat "\\<\\(" org-scheduled-string 
-		    "\\|" org-deadline-string 
-		    "\\|" org-closed-string "\\)")))
-    (while (re-search-forward re limit t)
-      (let ((keyword (match-string 1)))
-	(org-draw-icon (match-beginning 0) (match-end 0) 
-		       (org-special-keyword-icon-at keyword))))))
-
 (defun org-font-lock-add-priority-faces (limit)
   "Add the special priority faces."
   (when (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
