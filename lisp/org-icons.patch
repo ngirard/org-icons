@@ -51,7 +51,7 @@
  
 +(defun org-font-lock-add-todo-state-faces (limit)
 +  "Add the todo state faces."
-+  (while (re-search-forward (concat "^\\*+[ \t]+" org-todo-regexp "\\(.*\\|$\\)") limit t)
++  (when (re-search-forward (concat "^\\*+[ \t]+" org-todo-regexp "\\(.*\\|$\\)") limit t)
 +    (progn
 +      ;; TODO lines
 +      (add-text-properties

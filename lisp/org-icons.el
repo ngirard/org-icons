@@ -146,7 +146,7 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 (defun org-font-lock-add-todo-state-faces (limit)
   "Add the todo state faces."
   (let ((re-heading (concat "^\\(\\**\\)\\(\\*[ \t]+\\)" org-todo-regexp "\\(.*\\|$\\)")))
-    (while (re-search-forward re-heading limit t)
+    (when (re-search-forward re-heading limit t)
       (let* ((state (match-string 3))
 	     (tags (org-get-tags-at))
 	     (icon (org-todo-state-icon-at state tags)))
