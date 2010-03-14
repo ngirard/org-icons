@@ -1,35 +1,28 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 18:08:39.286468766 +0100
-@@ -4962,8 +4962,9 @@
++++ lisp/org.el	2010-03-14 19:50:34.828652687 +0100
+@@ -4962,8 +4962,7 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
  	   ;; Drawers
 -	   (list org-drawer-regexp '(0 'org-special-keyword t))
 -	   (list "^[ \t]*:END:" '(0 'org-special-keyword t))
-+	   ;(list org-drawer-regexp '(0 'org-special-keyword t))
-+	   ;(list "^[ \t]*:END:" '(0 'org-special-keyword t))
 +	   '(org-font-lock-add-drawer-faces)
  	   ;; Properties
  	   (list org-property-re
  		 '(1 'org-special-keyword t)
-@@ -4979,25 +4980,18 @@
+@@ -4979,9 +4978,8 @@
  				     (2 'org-footnote t)))
  	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
  	   '(org-hide-wide-columns (0 nil append))
 -	   ;; TODO lines
 -	   (list (concat "^\\*+[ \t]+" org-todo-regexp "\\([ \t]\\|$\\)")
 -		 '(1 (org-get-todo-face 1) t))
--	   ;; DONE
--	   (if org-fontify-done-headline
--	       (list (concat "^[*]+ +\\<\\("
--			     (mapconcat 'regexp-quote org-done-keywords "\\|")
--			     "\\)\\(.*\\)")
--		     '(2 'org-headline-done t))
--	     nil)
 +	   ;; TODO states
 +	   '(org-font-lock-add-todo-state-faces)
- 	   ;; Priorities
- 	   '(org-font-lock-add-priority-faces)
+ 	   ;; DONE
+ 	   (if org-fontify-done-headline
+ 	       (list (concat "^[*]+ +\\<\\("
+@@ -4994,10 +4992,7 @@
  	   ;; Tags
  	   '(org-font-lock-add-tag-faces)
  	   ;; Special keywords
@@ -38,35 +31,32 @@
 -	   (list (concat "\\<" org-closed-string) '(0 'org-special-keyword t))
 -	   (list (concat "\\<" org-clock-string) '(0 'org-special-keyword t))
 +	   '(org-font-lock-add-special-keyword-faces)
-+	   ;(list (concat "\\<" org-deadline-string) '(0 'org-special-keyword t))
-+	   ;(list (concat "\\<" org-scheduled-string) '(0 'org-special-keyword t))
-+	   ;(list (concat "\\<" org-closed-string) '(0 'org-special-keyword t))
-+	   ;(list (concat "\\<" org-clock-string) '(0 'org-special-keyword t))
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5077,63 @@
+@@ -5083,9 +5078,64 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
 +(defun org-font-lock-add-todo-state-faces (limit)
 +  "Add the todo state faces."
-+  (when (re-search-forward (concat "^\\*+[ \t]+" org-todo-regexp "\\(.*\\|$\\)") limit t)
-+    (progn
-+      ;; TODO lines
-+      (add-text-properties
-+       (match-beginning 1) (match-end 1) (list 'face (org-get-todo-face 1) 'font-lock-fontified t))
-+      ;; DONE
-+      ;; This part is buggy (sorry)
-+      (if org-fontify-done-headline
-+	  (save-excursion 
-+	    (when (re-search-backward (concat "[ \t]+\\<\\(" 
-+					      (mapconcat 'regexp-quote org-done-keywords "\\|")
-+					      "\\)\\(.*\\)")
-+				      (match-end 1) t)
-+	      (add-text-properties
-+	       (match-beginning 1) (match-end 1) (list 'face 'org-headline-done 'font-lock-fontified t))))
-+	nil))))
++  (let ((re-heading 
++	 (concat "^\\(\\**\\)\\(\\*[ \t]+\\)" org-todo-regexp "\\([ \t]\\|$\\)"))
++	(re-done
++	 (concat "^[*]+ +\\<\\("
++		 (mapconcat 'regexp-quote org-done-keywords "\\|")
++		 "\\)\\(.*\\)")))
++      ; FIXME when or while ?
++      (when (re-search-forward re-heading limit t)
++	(add-text-properties (match-beginning 3) (match-end 3)
++			     '('face (org-get-todo-face 1) 'font-lock-fontified t))
++	(if org-icons-mode
++	    (let* ((state (match-string 3))
++		   (tags (org-get-tags-at))
++		   (icon (org-todo-state-icon-at state tags)))
++	      (when icon
++		(org-draw-icon (match-beginning 2) (match-end 3) icon)))))
++    ))
 +       
 +(defun org-font-lock-add-special-keyword-faces (limit)
 +  (let ((re (concat "\\<\\(" org-scheduled-string 
@@ -110,7 +100,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -5093,7 +5141,13 @@
+@@ -5093,7 +5143,13 @@
  		      (cdr (assoc (char-after (match-beginning 1))
  				  org-priority-faces)))
  		     'org-special-keyword)
@@ -125,7 +115,7 @@
  
  (defun org-get-tag-face (kwd)
    "Get the right face for a TODO keyword KWD.
-@@ -6195,6 +6249,7 @@
+@@ -6195,6 +6251,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))
