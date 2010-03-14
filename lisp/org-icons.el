@@ -169,14 +169,6 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
       (org-draw-icon (match-beginning 1) (match-end 1) 
 		     (org-drawer-icon-at nil t)))))
 
-(defun org-font-lock-add-priority-faces (limit)
-  "Add the special priority faces."
-  (when (re-search-forward "\\[#\\([A-Z0-9]\\)\\]" limit t)
-      (let* ((pri (match-string 1))
-	     (icon (org-priority-icon-at pri)))
-	(when icon 
-	  (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon)))))
-
 ;;;; Minor mode
 (define-minor-mode org-icons-mode
   "When active, replace certain org-mode constructs

@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 17:52:33.086469463 +0100
++++ lisp/org.el	2010-03-14 17:58:00.676497878 +0100
 @@ -4962,8 +4962,9 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
@@ -99,7 +99,22 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -6195,6 +6232,7 @@
+@@ -5093,7 +5130,13 @@
+ 		      (cdr (assoc (char-after (match-beginning 1))
+ 				  org-priority-faces)))
+ 		     'org-special-keyword)
+-	   'font-lock-fontified t))))
++	   'font-lock-fontified t))
++    (if org-icons-mode
++	(let* ((pri (match-string 1))
++	       (icon (org-priority-icon-at pri)))
++	  (when icon 
++	    (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon))))
++    ))
+ 
+ (defun org-get-tag-face (kwd)
+   "Get the right face for a TODO keyword KWD.
+@@ -6195,6 +6238,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))
