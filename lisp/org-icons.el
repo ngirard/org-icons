@@ -186,6 +186,20 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 	(when icon 
 	  (org-draw-icon (1-(1-(match-beginning 1))) (1+(match-end 1)) icon)))))
 
+;;;; Minor mode
+(define-minor-mode org-icons-mode
+  "When active, replace certain org-mode constructs
+  onscreen with color and shape coded icons. The content of the org
+  buffer is not affected."
+  t " Icons" nil (if org-icons-mode (org-icons-enable) (org-icons-disable)))
+
+(defun org-icons-enable ()
+  "Enable Org-Icons mode.")
+
+(defun org-icons-disable ()
+  "Disable Org-Icons mode.")
+
+
 ;;;; Unused code
 
 ;; FIXME this function is not used?
