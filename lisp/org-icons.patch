@@ -1,6 +1,24 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-14 19:50:34.828652687 +0100
-@@ -4962,8 +4962,7 @@
++++ lisp/org.el	2010-03-15 00:01:58.616463641 +0100
+@@ -3450,6 +3450,17 @@
+    "org-feed"
+    '(org-feed-update org-feed-update-all org-feed-goto-inbox)))
+ 
++;; Autoload org-icons.el
++
++;; Define the variable already here, to make sure we have it.
++(defvar org-icons-mode nil
++  "Non-nil if Org-Icons mode is enabled.
++Use the command `org-icons-mode' to change this variable.")
++
++(eval-and-compile
++  (org-autoload
++   "org-icons"
++   '(org-icons-mode)))
+ 
+ ;; Autoload org-indent.el
+ 
+@@ -4962,8 +4973,7 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
  	   ;; Drawers
@@ -10,7 +28,7 @@
  	   ;; Properties
  	   (list org-property-re
  		 '(1 'org-special-keyword t)
-@@ -4979,9 +4978,8 @@
+@@ -4979,9 +4989,8 @@
  				     (2 'org-footnote t)))
  	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
  	   '(org-hide-wide-columns (0 nil append))
@@ -22,7 +40,7 @@
  	   ;; DONE
  	   (if org-fontify-done-headline
  	       (list (concat "^[*]+ +\\<\\("
-@@ -4994,10 +4992,7 @@
+@@ -4994,10 +5003,7 @@
  	   ;; Tags
  	   '(org-font-lock-add-tag-faces)
  	   ;; Special keywords
@@ -34,7 +52,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5078,64 @@
+@@ -5083,9 +5089,64 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -100,7 +118,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -5093,7 +5143,13 @@
+@@ -5093,7 +5154,13 @@
  		      (cdr (assoc (char-after (match-beginning 1))
  				  org-priority-faces)))
  		     'org-special-keyword)
@@ -115,7 +133,7 @@
  
  (defun org-get-tag-face (kwd)
    "Get the right face for a TODO keyword KWD.
-@@ -6195,6 +6251,7 @@
+@@ -6195,6 +6262,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))
