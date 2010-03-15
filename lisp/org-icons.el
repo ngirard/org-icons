@@ -75,7 +75,6 @@ Set this to where you have installed the accompanying org icons.")
     ("priority-a" . "prio-a")
     ("priority-b" . "prio-b")
     ("priority-c" . "prio-c")
-    ("priority-nil" . "prio-nil")
     ("keyword-closed" . "closed")
     ("keyword-deadline" . "deadline-ok")
     ("keyword-scheduled" . "scheduled-ok")
@@ -120,29 +119,25 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
    ((equal  "NEXT"     state) 
     (if (>= priority 2000) "state-next-important" "state-next"))
    ((equal  "DONE"     state) "state-done")
-   ((equal  "WAITING"  state) "state-waiting")
-   (t nil)))
+   ((equal  "WAITING"  state) "state-waiting")))
 
 (defun org-priority-icon-at (pri)
   (cond
    ((equal pri "A") "priority-a")
    ((equal pri "B") "priority-b")
-   ((equal pri "C") "priority-c")
-   (t nil)))
+   ((equal pri "C") "priority-c")))
 
 (defun org-drawer-icon-at (name drawer-end)
   (cond
    ((equal name "LOGBOOK") "drawer-logbook")
    ((equal name "PROPERTIES") "drawer-properties")
-   (drawer-end  "drawer-end")
-   (t nil)))
+   (drawer-end  "drawer-end")))
 
 (defun org-special-keyword-icon-at (keyword)
   (cond
    ((equal keyword org-closed-string) "keyword-closed")
    ((equal keyword org-deadline-string) "keyword-deadline")
-   ((equal keyword org-scheduled-string) "keyword-scheduled")
-   (t nil)))
+   ((equal keyword org-scheduled-string) "keyword-scheduled")))
 
 
 ;;;; Minor mode
