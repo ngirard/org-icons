@@ -60,7 +60,7 @@ Set this to where you have installed the accompanying org icons.")
 
 ;;;; List of icons
 
-(defvar org-icon-alist
+(defvar org-icons-set
   '(("state-next" . "rect-blue")
     ("state-next-important" . "rect-violet")
     ("state-done" . "rect-green")
@@ -77,8 +77,7 @@ Set this to where you have installed the accompanying org icons.")
     ("priority-c" . "prio-c")
     ("keyword-closed" . "closed")
     ("keyword-deadline" . "deadline-ok")
-    ("keyword-scheduled" . "scheduled-ok")
-    )
+    ("keyword-scheduled" . "scheduled-ok"))
   "Alist of icons.
 The car of each element is a string, denoting the icon. The cdr is either nil or the name of the file containing the icon, minus the extension.")
 
@@ -86,8 +85,8 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 
 (setq org-icon-hash (make-hash-table :test 'equal))
 
-(let ((oia org-icon-alist) a name file)
-  (while (setq a (pop oia))
+(let ((ois org-icons-set) a name file)
+  (while (setq a (pop ois))
     (let ((name (car a)) (file (cdr a)))
       (puthash name 
 	       (if file 
