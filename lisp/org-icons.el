@@ -111,7 +111,7 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 ;;;; High-level functions
 
 (defun org-todo-state-icon-at (state tags)
-  (progn (cond
+  (cond
    ((equal  "PROJECT"  state) "state-project")
    ((equal  "PROJDONE" state) "state-project-done")
    ((member "SOMEDAY"  tags ) "state-someday")
@@ -119,28 +119,28 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
    ((equal  "NEXT"     state) "state-next")
    ((equal  "DONE"     state) "state-done")
    ((equal  "WAITING"  state) "state-waiting")
-   (t nil))))
+   (t nil)))
 
 (defun org-priority-icon-at (pri)
-  (progn (cond
+  (cond
    ((equal pri "A") "priority-a")
    ((equal pri "B") "priority-b")
    ((equal pri "C") "priority-c")
-   (t nil))))
+   (t nil)))
 
 (defun org-drawer-icon-at (name drawer-end)
-  (progn (cond
+  (cond
    ((equal name "LOGBOOK") "drawer-logbook")
    ((equal name "PROPERTIES") "drawer-properties")
    (drawer-end  "drawer-end")
-   (t nil))))
+   (t nil)))
 
 (defun org-special-keyword-icon-at (keyword)
-  (progn (cond
+  (cond
    ((equal keyword org-closed-string) "keyword-closed")
    ((equal keyword org-deadline-string) "keyword-deadline")
    ((equal keyword org-scheduled-string) "keyword-scheduled")
-   (t nil))))
+   (t nil)))
 
 
 ;;;; Minor mode
