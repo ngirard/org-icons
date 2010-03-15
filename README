@@ -2,15 +2,29 @@
 
 1. Apply org-icons.patch on the latest org-mode code:
     cd path/to/org-mode
-    patch < path/to/org-icons/lisp/org-icons.patch
+    patch -p0 < path/to/org-icons/lisp/org-icons.patch
     rm org.elc ; make ; sudo make install
 
 2. Add these lines to your ~/.emacs:
     (setq load-path (cons "/path/to/org-icons/lisp" load-path))
-    (require 'org-icons)
 
 3. Restart emacs
+   
+* Usage
 
+- You can turn on `org-icons-mode' on startup by setting the
+  org-startup-with-icons-mode variable to true,
+  
+    (setq org-startup-with-icons-mode t)
+
+- You can also enable or disable icon display on a per-buffer level, using
+
+    M-x org-icons-mode
+
+- A key sequence can easily be used for this, like =C-c i= in this example:
+
+    (add-hook 'org-mode-hook 
+      (lambda () (local-set-key "\C-ci" 'org-icons-mode)))
 
 * Configuration
 
@@ -18,5 +32,5 @@
 
 * Please consider...
 
-- the code is pre-alpha;
+- the code is still beta;
 - any suggestion / contribution warmly welcome.
