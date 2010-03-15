@@ -100,8 +100,7 @@
 +	 (concat "^[*]+ +\\<\\("
 +		 (mapconcat 'regexp-quote org-done-keywords "\\|")
 +		 "\\)\\(.*\\)")))
-+      ; FIXME when or while ?
-+      (when (re-search-forward re-heading limit t)
++      (while (re-search-forward re-heading limit t)
 +	(add-text-properties (match-beginning 3) (match-end 3)
 +			     '('face (org-get-todo-face 1) 'font-lock-fontified t))
 +	(if org-icons-mode
