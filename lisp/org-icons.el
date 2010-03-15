@@ -62,6 +62,7 @@ Set this to where you have installed the accompanying org icons.")
 
 (defvar org-icon-alist
   '(("state-next" . "rect-blue")
+    ("state-next-important" . "rect-violet")
     ("state-done" . "rect-green")
     ("state-someday" . "rect-grey1")
     ("state-todo" . "rect-grey2")
