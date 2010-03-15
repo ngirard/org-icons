@@ -101,7 +101,7 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 ;;;; Drawing icons in a buffer
 
 (defun draw-icon (beg end icon)
-  (add-text-properties beg end (list 'display icon)))
+  (add-text-properties beg end (list 'display icon 'org-icons t)))
 
 (defun org-draw-icon (beg end name)
   (draw-icon beg end (gethash name org-icon-hash))
@@ -152,16 +152,33 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 
 (defun org-icons-enable ()
   "Enable Org-Icons mode."
-    (font-lock-fontify-buffer)
+  (org-toggle-icon-overlays t)
 )
 
 (defun org-icons-disable ()
   "Disable Org-Icons mode."
-  (let ((modified-p (buffer-modified-p)))
-    (remove-text-properties (point-min) (point-max) '(display))
-    (set-buffer-modified-p modified-p))
+  (org-toggle-icon-overlays nil)
 )
 
+(defun org-toggle-icon-overlays (toggle)
+  "Toggle the display of Org-Icons."
+  (interactive)
+  (unless toggle
+    (let ((p (point-min)) (bmp (buffer-modified-p)))
+      (while (setq p (next-single-property-change p 'display))
+	(if (and (get-text-property p 'display)
+		 (get-text-property p 'org-icons))
+	    (remove-text-properties
+	     p (setq p (next-single-property-change p 'display))
+	     '(display org-icons))))
+      (set-buffer-modified-p bmp)))
+  ;; FIXME: useful ?
+  ;; (if (featurep 'xemacs)
+  ;;     (remove-text-properties (point-min) (point-max) '(end-glyph t)))
+  (org-restart-font-lock)
+  (if toggle
+      (message "Icons are displayed")
+    (message "Icons were removed")))
 
 ;;;; Unused code
 
