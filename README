@@ -1,3 +1,12 @@
+This is the Org Icons minor mode for Org Mode [1].
+
+I indend to win this year's Most Ridiculous Release Number Contest, so
+I set the current one to 0.271182363. Wish me luck: I seem to have some quite serious opponents... I dare you, Memoir ! [2].
+
+[1] http://orgmode.org
+[2] http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/
+
+
 * Installation
 
 1. Apply org-icons.patch on the latest org-mode code:
@@ -5,7 +14,7 @@
     patch -p0 < path/to/org-icons/lisp/org-icons.patch
     rm org.elc ; make ; sudo make install
 
-2. Add these lines to your ~/.emacs:
+2. Add org-icons/lisp to your load-path:
     (setq load-path (cons "/path/to/org-icons/lisp" load-path))
 
 3. Restart emacs
@@ -28,7 +37,36 @@
 
 * Configuration
 
+Conceivably the Org Mode community will agree on how Org icons theme should be defined, if they make sense. Org Mode's philosophy is to be as generic as possible and it's not clear to me how to capture what most people need while keeping in balance with flexibility.
 
+Meanwhile, the set of icons that can be used, `org-icons-set', is a little bit hardwired into the code.
+
+More flexible are the functions governing which icon to draw, namely `org-todo-state-icon-at', `org-priority-icon-at', `org-drawer-icon-at' and `org-special-keyword-icon-at'. Looking at the source code should be enough for you to redefine these functions to suit your needs. For instance, you'll most probably want to write in your configuration
+
+  (defun org-todo-state-icon-at (state priority tags)
+    (cond
+      ...
+    )
+  )
+
+and instead of the dots, a set of (condition icon-name) like
+
+  ((member "SOMEDAY"  tags ) "state-someday")
+
+or more complex, like
+
+  ((equal  "NEXT"     state) 
+     (if (>= priority 2000) "state-next-important" "state-next"))
+
+* Bugs and limitations
+
+- Documentation is missing.
+- No themes yet: see the introduction.
+- When cycling from a TODO keyword to no keyword using S-right, the
+  latest icon remains displayed.
+- When loading an org buffer, font-lock-fontify-buffer is called twice
+  if org-startup-with-icons-mode is set to t.
+- The standard icon set isn't visually consistent enough
 
 * Please consider...
 
