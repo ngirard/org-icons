@@ -1,5 +1,5 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-15 00:18:17.616465805 +0100
++++ lisp/org.el	2010-03-15 12:18:24.356467186 +0100
 @@ -313,6 +313,15 @@
    :group 'org-startup
    :type 'boolean)
@@ -88,7 +88,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5102,64 @@
+@@ -5083,9 +5102,65 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -106,7 +106,9 @@
 +	(if org-icons-mode
 +	    (let* ((state (match-string 3))
 +		   (tags (org-get-tags-at))
-+		   (icon (org-todo-state-icon-at state tags)))
++		   (priority
++		    (org-get-priority (buffer-substring (point) (point-at-eol))))
++		   (icon (org-todo-state-icon-at state priority tags)))
 +	      (when icon
 +		(org-draw-icon (match-beginning 2) (match-end 3) icon)))))
 +    ))
@@ -153,7 +155,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -5093,7 +5167,13 @@
+@@ -5093,7 +5168,13 @@
  		      (cdr (assoc (char-after (match-beginning 1))
  				  org-priority-faces)))
  		     'org-special-keyword)
@@ -168,7 +170,7 @@
  
  (defun org-get-tag-face (kwd)
    "Get the right face for a TODO keyword KWD.
-@@ -6195,6 +6275,7 @@
+@@ -6195,6 +6276,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))

@@ -111,13 +111,14 @@ The car of each element is a string, denoting the icon. The cdr is either nil or
 
 ;;;; High-level functions
 
-(defun org-todo-state-icon-at (state tags)
+(defun org-todo-state-icon-at (state priority tags)
   (cond
    ((equal  "PROJECT"  state) "state-project")
    ((equal  "PROJDONE" state) "state-project-done")
    ((member "SOMEDAY"  tags ) "state-someday")
    ((equal  "TODO"     state) "state-todo")
-   ((equal  "NEXT"     state) "state-next")
+   ((equal  "NEXT"     state) 
+    (if (>= priority 2000) "state-next-important" "state-next"))
    ((equal  "DONE"     state) "state-done")
    ((equal  "WAITING"  state) "state-waiting")
    (t nil)))
