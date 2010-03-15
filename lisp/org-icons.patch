@@ -1,6 +1,22 @@
 --- lisp/org.el.orig	2010-03-13 00:40:33.798985209 +0100
-+++ lisp/org.el	2010-03-15 00:01:58.616463641 +0100
-@@ -3450,6 +3450,17 @@
++++ lisp/org.el	2010-03-15 00:18:17.616465805 +0100
+@@ -313,6 +313,15 @@
+   :group 'org-startup
+   :type 'boolean)
+ 
++(defcustom org-startup-with-icons-mode nil
++  "Non-nil means turn on `org-icons-mode' on startup.
++This can also be configured on a per-file basis by adding one of
++the following lines anywhere in the buffer:
++
++   #+STARTUP: icons"
++  :group 'org-startup
++  :type 'boolean)
++
+ (defcustom org-startup-indented nil
+   "Non-nil means turn on `org-indent-mode' on startup.
+ This can also be configured on a per-file basis by adding one of
+@@ -3450,6 +3459,17 @@
     "org-feed"
     '(org-feed-update org-feed-update-all org-feed-goto-inbox)))
  
@@ -18,7 +34,27 @@
  
  ;; Autoload org-indent.el
  
-@@ -4962,8 +4973,7 @@
+@@ -3805,7 +3825,8 @@
+     ("noptag" org-tag-persistent-alist nil)
+     ("hideblocks" org-hide-block-startup t)
+     ("nohideblocks" org-hide-block-startup nil)
+-    ("beamer" org-startup-with-beamer-mode t))
++    ("beamer" org-startup-with-beamer-mode t)
++    ("icons" org-startup-with-icons-mode t))
+   "Variable associated with STARTUP options for org-mode.
+ Each element is a list of three items: The startup options as written
+ in the #+STARTUP line, the corresponding variable, and the value to
+@@ -4334,6 +4355,9 @@
+     (when org-startup-indented
+       (require 'org-indent)
+       (org-indent-mode 1))
++    (when org-startup-with-icons-mode
++      (require 'org-icons)
++      (org-icons-mode 1))
+     (unless org-inhibit-startup-visibility-stuff
+       (org-set-startup-visibility))))
+ 
+@@ -4962,8 +4986,7 @@
  	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
  	   '("| *\\(<[lr]?[0-9]*>\\)" (1 'org-formula t))
  	   ;; Drawers
@@ -28,7 +64,7 @@
  	   ;; Properties
  	   (list org-property-re
  		 '(1 'org-special-keyword t)
-@@ -4979,9 +4989,8 @@
+@@ -4979,9 +5002,8 @@
  				     (2 'org-footnote t)))
  	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
  	   '(org-hide-wide-columns (0 nil append))
@@ -40,7 +76,7 @@
  	   ;; DONE
  	   (if org-fontify-done-headline
  	       (list (concat "^[*]+ +\\<\\("
-@@ -4994,10 +5003,7 @@
+@@ -4994,10 +5016,7 @@
  	   ;; Tags
  	   '(org-font-lock-add-tag-faces)
  	   ;; Special keywords
@@ -52,7 +88,7 @@
  	   ;; Emphasis
  	   (if em
                 (if (featurep 'xemacs)
-@@ -5083,9 +5089,64 @@
+@@ -5083,9 +5102,64 @@
  				 'font-lock-fontified t))
        (backward-char 1))))
  
@@ -118,7 +154,7 @@
      (add-text-properties
       (match-beginning 0) (match-end 0)
       (list 'face (or (org-face-from-face-or-color
-@@ -5093,7 +5154,13 @@
+@@ -5093,7 +5167,13 @@
  		      (cdr (assoc (char-after (match-beginning 1))
  				  org-priority-faces)))
  		     'org-special-keyword)
@@ -133,7 +169,7 @@
  
  (defun org-get-tag-face (kwd)
    "Get the right face for a TODO keyword KWD.
-@@ -6195,6 +6262,7 @@
+@@ -6195,6 +6275,7 @@
  	     (t
  	      (or split (end-of-line 1))
  	      (newline (if blank 2 1)))))))
