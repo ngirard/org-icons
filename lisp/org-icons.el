@@ -77,7 +77,9 @@ Set this to where you have installed the accompanying org icons.")
     ("priority-c" . "prio-c")
     ("keyword-closed" . "closed")
     ("keyword-deadline" . "deadline-ok")
-    ("keyword-scheduled" . "scheduled-ok"))
+    ("keyword-scheduled" . "scheduled-ok")
+    ("src-ruby" . "src-ruby")
+    ("src-emacs-lisp" . "src-emacs-lisp"))
   "Alist of icons.
 The car of each element is a string, denoting the icon. The cdr is either nil or the name of the file containing the icon, minus the extension.")
 
